@@ -1,4 +1,5 @@
 const Category = require('../models/category');
+const Post = require('../models/post')
 
 const addCategory = async (req, res) => {
   try {
@@ -37,17 +38,22 @@ const fetchCategories = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id);
-    if (!category) {
+    const cat = await Category.findOne({ _id: req.params.id });
+    if (!cat) {
       return res.status(404).send({
-        error: 'Category Not Found!',
+        error: 'Category not found',
       });
     }
-    await Category.deleteOne(req.params.id);
-    res.send(category);
+    await Category.deleteOne({
+      _id: cat._id,
+    });
+    await Post.deleteMany({
+      category: cat.name,
+    });
+    res.send(cat);
   } catch (e) {
     res.status(500).send({
-      error: e.message,
+      error: 'Error',
     });
   }
 };
