@@ -12,6 +12,14 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+categorySchema.pre('deleteOne', async function (next) {
+  const category = this;
+  await Post.deleteMany({
+    category: category.name,
+  });
+  next();
+});
+
 const categoryModel = mongoose.model('Category', categorySchema);
 
 module.exports = categoryModel;

@@ -43,7 +43,7 @@ const deleteCategory = async (req, res) => {
         error: 'Category Not Found!',
       });
     }
-    await Category.findByIdAndDelete(req.params.id);
+    await Category.deleteOne(req.params.id);
     res.send(category);
   } catch (e) {
     res.status(500).send({
