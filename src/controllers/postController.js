@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+const Comment = require('../models/comment');
 
 const addPost = async (req, res) => {
   try {
@@ -148,6 +149,10 @@ const deletePost = async (req, res) => {
         error: 'Post not found!',
       });
     }
+    // Delete Comments of the deleted post
+    await Comment.deleteMany({
+      postId: post._id,
+    });
     res.send(post);
   } catch (e) {
     res.status(500).send({
